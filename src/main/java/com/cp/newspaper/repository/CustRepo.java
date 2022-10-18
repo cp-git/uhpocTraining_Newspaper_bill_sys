@@ -13,52 +13,92 @@ import com.cp.newspaper.exception.CPException;
 import com.cp.newspaper.jdbc.DBManager;
 
 public class CustRepo {
-	public void insertCustomer(Customer cust) throws CPException {
-		// TODO Auto-generated method stub
-		DBManager dbm = DBManager.getDBManager();
-		Connection con = null;
-		String insertQuery = "INSERT INTO customer ( cust_name, cust_address1, cust_address2, cust_phone) VALUES (?,?,?,?)";
-		PreparedStatement pstmt = null;
-		try {
-			con = dbm.getConnection();
-			pstmt = con.prepareStatement(insertQuery);
-			pstmt.setString(1, cust.getCust_name());
-			pstmt.setString(2, cust.getCust_address1());
-			pstmt.setString(3, cust.getCust_address2());
-			pstmt.setLong(4, cust.getCust_phone());
-			pstmt.execute();
-			con.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	Connection con;
+	PreparedStatement psobj = null;
+	ResultSet rsObj = null;
+	Statement stmt = null;
+	DBManager dbManager = DBManager.getDBManager();
 
-	public List<Customer> getCustomerDetails() throws CPException {
-		DBManager dbm = DBManager.getDBManager();
-		Connection con = null;
-		con = dbm.getConnection();
-		String dataQuery = "select * from customer";
-		Statement stmt = null;
-		List<Customer> listCust = new ArrayList<Customer>();
+	public int insertCustomer(Customer customer) throws CPException {
+		String insertCustomer = "INSERT INTO customer(cust_name,cust_address1,cust_address2,cust_phone) VALUES(?,?,?,?)";
+
+		con = dbManager.getConnection();
 
 		try {
-			stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(dataQuery);
-			while (rs.next()) {
-				int custId = rs.getInt("cust_id");
-				String custName = rs.getString("cust_name");
-				String custAddress1 = rs.getString("cust_address1");
-				String custAddress2 = rs.getString("cust_address2");
-				long custPhone = rs.getLong("cust_phone");
+			psobj = con.prepareStatement(insertCustomer);
+			psobj.setString(1, customer.getCust_name());
+		
+			psobj.setString(2, customer.getCust_address1());
+			psobj.setString(3, customer.getCust_address2());
+			psobj.setLong(2, customer.getCust_phone());
+			
+			psobj.execute();
 
-				Customer cust = new Customer(custId, custName, custAddress1, custAddress2, custPhone);
-				listCust.add(cust);
-			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			dbManager.closeConnection(con);
 		}
-		return listCust;
+		return getLastCustId();
+
+	}
+
+	public int getLastCustId() {
+		int custId = 0;
+		String insertQuery = "select max(cust_id) from customer";
+		try {
+			con = dbManager.getConnection();
+			stmt = con.createStatement();
+			rsObj = stmt.executeQuery(insertQuery);
+			while (rsObj.next()) {
+				custId = rsObj.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		} finally {
+			dbManager.closeConnection(con);
+
+		}
+		return custId;
+	}
+
+	public List<Customer> getCustomerDetails() {
+		List<Customer> customer = new ArrayList<>();
+		String DataQuery = "Select * from customer";
+
+		try {
+
+			con = dbManager.getConnection();
+			psobj = con.prepareStatement(DataQuery);
+			rsObj = psobj.executeQuery();
+			while (rsObj.next()) {
+				int custId = rsObj.getInt("cust_id");
+				String custName = rsObj.getString("cust_name");
+				String custAddrs1 = rsObj.getString("cust_address1");
+				String custAddrs2 = rsObj.getString("cust_address2");
+				int custPhone = rsObj.getInt("cust_phone");
+
+				Customer cust = new Customer(custId, custName, custAddrs1,
+						custAddrs2,custPhone);
+
+				customer.add(cust);
+				// System.out.println(customer);
+
+			} // while--Loop Close
+
+		}// try block close
+		catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dbManager.closeConnection(con);
+
+		}
+		return customer;
+
 	}
 }

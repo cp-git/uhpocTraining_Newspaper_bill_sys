@@ -82,9 +82,14 @@ public class DBManager {
 	 * @return DBManager
 	 * @throws CPException
 	 */
-	public static DBManager getDBManager() throws CPException {
+	public static DBManager getDBManager()  {
 		if (null == dbManager) {
-			dbManager = new DBManager();
+			try {
+				dbManager = new DBManager();
+			} catch (CPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return dbManager;
 	}

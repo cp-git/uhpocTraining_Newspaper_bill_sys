@@ -5,73 +5,86 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.cp.newspaper.entity.Customer;
+import com.cp.newspaper.entity.Particular;
 import com.cp.newspaper.exception.CPException;
+import com.cp.newspaper.jdbc.MessageBundle;
 import com.cp.newspaper.repository.CustRepo;
-import com.cp.newspaper.service.CustomerService;
-import com.cp.newspaper.serviceImpl.CustomerServiceImpl;
-		
-		public class MainController {
-			static HashMap<Long, Customer> custHashMap = new HashMap<>();
-			private static void loadCache() throws CPException {
-				CustRepo cr = new CustRepo();
-				List<Customer> listCust = cr.getCustomerDetails();
-				for (Customer cObj : listCust) {
-					custHashMap.put(cObj.getCust_phone(), cObj);
-				}
-			}
-			public static void main(String[] args) throws CPException {
-				// TODO Auto-generated method stub
-				loadCache();
-				while (true) {
-					System.out.println("============= Main Menu ============");
-					System.out.println("1. Add Particular Details");
-					System.out.println("2. Add Customer Details");
-					System.out.println("3. Generate Newspaper Bill");
-					System.out.println("4. Exit");
-					Scanner sc = new Scanner(System.in);
-					int choice = sc.nextInt();
-					System.out.println(choice);
-					switch (choice) {
-					case 1:
-						
-						break;
-					case 2:
-						
-							System.out.println("Customer Name");
-							String custName = sc.next();
-							System.out.println("Customer_Address1");
-							String cust_Address1 = sc.next();
-							System.out.println("Customer_Address2");
-							String cust_Address2 = sc.next();
-							System.out.println("Customer Phone");
-							Long custPhone = sc.nextLong();
-							CustomerService custServ = new CustomerServiceImpl();
-							Customer cust = new Customer(custName, cust_Address1,cust_Address2,custPhone);
-							System.out.println("Customer created successfully");
-							try {
-								System.out.println(cust.toString());
-								custServ.createCustomer(cust);
-							} catch (CPException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							custHashMap.put(custPhone, cust);
-	
-						break;
-					case 3:
-						break;
-					case 4:
-						System.out.println("Exit Successfully");
-						sc.close();
-						System.exit(0);
-						break;
-					default:
-						System.out.println("Please enter option 1, 2, 3 or 4 ");
-						
-					}
-				}
-			}
+import com.cp.newspaper.repository.PartRepo;
+import com.cp.newspaper.service.CustService;
+import com.cp.newspaper.service.ParticularService;
+import com.cp.newspaper.serviceImpl.CustServiceImpl;
+import com.cp.newspaper.serviceImpl.ParticularServiceImpl;
+
+public class MainController {
+	 static HashMap<Long, Customer> customerHash = new HashMap<Long, Customer>();
+
+	private static void loadCache() {
+		CustService custService = new CustServiceImpl();
+		// System.out.println("Object Id :: " + custService);
+		customerHash = custService.display();
+		// System.out.println(customerHash);
 
 	}
 
+	public static void main(String[] args) throws CPException {
+		// TODO Auto-generated method stub
+		MessageBundle mb = MessageBundle.getBundle();
+		try {
+			if ((customerHash != null || customerHash.size() == 0)) {
+				loadCache();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		while (true) {
+			System.out.println("============= Main Menu ============");
+			System.out.println("1. Add Particular Details");
+			System.out.println("2. Add Customer Details");
+			System.out.println("3. Generate Newspaper Bill");
+			System.out.println("4. Exit");
+			Scanner sc = new Scanner(System.in);
+			int choice = sc.nextInt();
+			System.out.println(choice);
+			switch (choice) {
+			case 1:
+				break;
+			case 2:
+				CustService custService = new CustServiceImpl();
+
+				int custId = 0;
+
+				// custService.display();
+
+				System.out.println("Enter the Customer Name");
+				String custName = sc.next();
+
+				System.out.println("Enter the Customer Address1");
+				String custAddrs1 = sc.next();
+
+				System.out.println("Enter the Customer Address2");
+				String custAddrs2 = sc.next();
+				System.out.println("Enter the Customer Phone Number");
+				long custPhone = sc.nextLong();
+
+				if (customerHash.containsKey(custPhone)) {
+					System.out.println("Already Exist");
+					custId = customerHash.get(custPhone).getCust_id();
+
+				} else {
+					Customer customer = new Customer(custName, custAddrs1, custAddrs2, custPhone);
+					custId = custService.createCustomer(customer);
+					customer.setCust_id(custId);
+					customerHash.put(custPhone, customer);
+
+				}
+				// printing customer details
+				System.out.println(customerHash.get(custPhone));
+
+				System.out.println();
+				break;
+			}
+		}
+	}
+}
