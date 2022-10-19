@@ -27,11 +27,11 @@ public class CustRepo {
 		try {
 			psobj = con.prepareStatement(insertCustomer);
 			psobj.setString(1, customer.getCust_name());
-		
+
 			psobj.setString(2, customer.getCust_address1());
 			psobj.setString(3, customer.getCust_address2());
-			psobj.setLong(2, customer.getCust_phone());
-			
+			psobj.setLong(4, customer.getCust_phone());
+
 			psobj.execute();
 
 		} catch (SQLException e) {
@@ -46,6 +46,7 @@ public class CustRepo {
 
 	public int getLastCustId() {
 		int custId = 0;
+
 		String insertQuery = "select max(cust_id) from customer";
 		try {
 			con = dbManager.getConnection();
@@ -83,15 +84,14 @@ public class CustRepo {
 				String custAddrs2 = rsObj.getString("cust_address2");
 				int custPhone = rsObj.getInt("cust_phone");
 
-				Customer cust = new Customer(custId, custName, custAddrs1,
-						custAddrs2,custPhone);
+				Customer cust = new Customer(custId, custName, custAddrs1, custAddrs2, custPhone);
 
 				customer.add(cust);
 				// System.out.println(customer);
 
 			} // while--Loop Close
 
-		}// try block close
+		} // try block close
 		catch (Exception e) {
 			e.printStackTrace();
 		} finally {

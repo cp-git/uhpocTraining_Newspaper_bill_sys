@@ -1,9 +1,7 @@
 package com.cp.newspaper.serviceImpl;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-
 
 import com.cp.newspaper.entity.Particular;
 import com.cp.newspaper.exception.CPException;
@@ -36,24 +34,19 @@ public class ParticularServiceImpl implements ParticularService {
 		return isPartExist;
 	}
 
-	
-
-	
-	
-
 	@Override
 	public int createPart(Particular part) throws CPException {
 		// TODO Auto-generated method stub
 		int partId = 0;
 		this.partRepo = new PartRepo();
 		try {
-			partId = partRepo.insertParticular(part);
+			partRepo.insertParticular(part);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return partId;
-		
+
 	}
 
 	@Override
@@ -75,6 +68,5 @@ public class ParticularServiceImpl implements ParticularService {
 		this.partRepo = new PartRepo();
 		return partRepo.getProductByName(partName);
 
-		
 	}
 }
