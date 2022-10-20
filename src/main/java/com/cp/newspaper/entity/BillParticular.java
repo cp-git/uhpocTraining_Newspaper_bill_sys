@@ -12,6 +12,13 @@ public class BillParticular {
 		this.part_id = part_id;
 	}
 
+	public BillParticular(int bpart_id, int bill_id, int part_id) {
+		super();
+		this.bpart_id = bpart_id;
+		this.bill_id = bill_id;
+		this.part_id = part_id;
+	}
+
 	public int getBpart_id() {
 		return bpart_id;
 	}

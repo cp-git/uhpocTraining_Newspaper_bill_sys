@@ -24,7 +24,7 @@ public class MainController {
 
 		ParticularService part = new ParticularServiceImpl();
 		partCache = part.getPartHashMap();
-		// System.out.println(prodCache);
+		// System.out.println(partCache);
 
 	}
 
@@ -46,6 +46,8 @@ public class MainController {
 			System.out.println("2. Add Customer Details");
 			System.out.println("3. Generate Newspaper Bill");
 			System.out.println("4. Exit");
+			System.out.println("Please enter a valid options 1,2,3 or 4");
+
 			Scanner sc = new Scanner(System.in);
 			int choice = sc.nextInt();
 			System.out.println(choice);
@@ -110,7 +112,6 @@ public class MainController {
 
 						if (customerHash.containsKey(custPhone)) {
 							System.out.println("Already Exist");
-							// custId = customerHash.get(custPhone).getCust_id();
 
 						} else {
 							Customer customer = new Customer(custName, custAddrs1, custAddrs2, custPhone);
@@ -139,7 +140,13 @@ public class MainController {
 			case 3:
 				break;
 			case 4:
+				System.out.println("Terminated Successfully");
+				sc.close();
+				System.exit(0);
 				break;
+			default:
+				System.out.println("Please enter option 1, 2, 3 or 4 ");
+
 			}
 		}
 	}

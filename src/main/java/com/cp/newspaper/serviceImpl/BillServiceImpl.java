@@ -6,6 +6,7 @@ import java.util.List;
 import com.cp.newspaper.entity.Bill;
 import com.cp.newspaper.entity.BillParticular;
 import com.cp.newspaper.exception.CPException;
+import com.cp.newspaper.repository.BillRepo;
 import com.cp.newspaper.service.BillService;
 
 public class BillServiceImpl implements BillService {
@@ -45,7 +46,7 @@ public class BillServiceImpl implements BillService {
 		int billId = 0;
 		for (String partName : partCart.keySet()) {
 			BillParticular billPart = partCart.get(partName);
-			billPart.setBillId(billRepo.getBillId());
+			billPart.setBill_id(BillRepo.getBillId());
 			partCart.put(partName, billPart);
 		}
 

@@ -54,4 +54,11 @@ public class Bill {
 		this.cust_id = cust_id;
 	}
 
+	public Bill(Date bill_date, String bill_month, int cust_id) {
+		super();
+		this.bill_date = bill_date;
+		this.bill_month = bill_month;
+		this.cust_id = cust_id;
+	}
+
 }

@@ -82,17 +82,16 @@ public class CustRepo {
 				String custName = rsObj.getString("cust_name");
 				String custAddrs1 = rsObj.getString("cust_address1");
 				String custAddrs2 = rsObj.getString("cust_address2");
-				int custPhone = rsObj.getInt("cust_phone");
+				long custPhone = rsObj.getLong("cust_phone");
 
 				Customer cust = new Customer(custId, custName, custAddrs1, custAddrs2, custPhone);
 
 				customer.add(cust);
 				// System.out.println(customer);
 
-			} // while--Loop Close
+			}
 
-		} // try block close
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			dbManager.closeConnection(con);

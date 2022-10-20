@@ -94,7 +94,7 @@ public class PartRepo {
 		return listPart;
 	}
 
-	public Particular getProductByName(String partName) {
+	public Particular getParticularByName(String partName) {
 		// TODO Auto-generated method stub
 		return null;
 	}

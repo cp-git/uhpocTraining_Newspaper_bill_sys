@@ -66,7 +66,7 @@ public class ParticularServiceImpl implements ParticularService {
 	public Particular getParticularByName(String partName) {
 		// TODO Auto-generated method stub
 		this.partRepo = new PartRepo();
-		return partRepo.getProductByName(partName);
+		return partRepo.getParticularByName(partName);
 
 	}
 }
