@@ -3,12 +3,16 @@ package com.cp.newspaper.controller;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.cp.newspaper.entity.Bill;
+import com.cp.newspaper.entity.BillParticular;
 import com.cp.newspaper.entity.Customer;
 import com.cp.newspaper.entity.Particular;
 import com.cp.newspaper.exception.CPException;
 import com.cp.newspaper.jdbc.MessageBundle;
+import com.cp.newspaper.service.BillService;
 import com.cp.newspaper.service.CustService;
 import com.cp.newspaper.service.ParticularService;
+import com.cp.newspaper.serviceImpl.BillServiceImpl;
 import com.cp.newspaper.serviceImpl.CustServiceImpl;
 import com.cp.newspaper.serviceImpl.ParticularServiceImpl;
 
@@ -117,6 +121,7 @@ public class MainController {
 							Customer customer = new Customer(custName, custAddrs1, custAddrs2, custPhone);
 							custId = custService.createCustomer(customer);
 							customer.setCust_id(custId);
+							System.out.println("custid" + custId);
 							customerHash.put(custPhone, customer);
 							System.out.println("Customer details inserted successfully");
 
@@ -138,8 +143,70 @@ public class MainController {
 				}
 				break;
 			case 3:
+
+				if (customerHash.isEmpty()) {
+					System.out.println("Please create Customer first");
+					continue;
+				}
+
+				if (partCache.isEmpty()) {
+					System.out.println("Please create particulaer first");
+					continue;
+				}
+
+				BillService billService = new BillServiceImpl();
+				CustService custservice = new CustServiceImpl();
+				int custid = 0;
+				System.out.println("Enter the Customer Phone Number");
+				long custPhone = sc.nextLong();
+
+				if (customerHash.containsKey(custPhone)) {
+					// System.out.println("customer added");
+					custId = customerHash.get(custPhone).getCust_id();
+					System.out.println("here" + custId);
+					Bill bill = new Bill(custid);
+					System.out.println(bill.getCust_id());
+					int billId = billService.billCreate(bill);
+
+					// Bill Particular
+					HashMap<String, BillParticular> partcart = new HashMap<>();
+
+					while (true) {
+						System.out.println("Enter particular name");
+						String partName = sc.next();
+
+						if (partCache.containsKey(partName)) {
+							Particular particular = partCache.get(partName);
+							System.out.println("Particular added");
+
+							// BillParticular bilPart = new BillParticular(particular.getPart_id(),
+							// partAmount);
+							// partcart.put(partName, bilPart);
+
+							System.out.println("Do you want to add another particular - [Y]es or [N]o?");
+							String ch = sc.next();
+							if (ch.equals("Y") || ch.equals("y")) {
+								continue;
+							} else {
+								billService.createBillParticular(partcart);
+								break;
+							}
+						} else {
+							System.out.println("Please enter valid particular name to continue");
+
+							continue;
+						}
+
+					}
+
+				} else {
+					System.out.println("Customer not exist");
+
+				}
+
 				break;
 			case 4:
+
 				System.out.println("Terminated Successfully");
 				sc.close();
 				System.exit(0);

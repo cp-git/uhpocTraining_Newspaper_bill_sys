@@ -1,12 +1,13 @@
 package com.cp.newspaper.repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,12 +26,23 @@ public class BillRepo {
 	public int insertbill(Bill bill) throws CPException {
 		con = dbManager.getConnection();
 		// String
-		String insertBill = "INSERT INTO bill(cust_id) VALUES(?)";
+		String insertBill = "INSERT INTO bill(bill_date,bill_month,cust_id) VALUES(?,?,?)";
+		LocalDate now = LocalDate.now();
+		LocalDate earlier = now.minusMonths(1);
+		Date date = Date.valueOf(now); // psobj .setDate needs date datatype.
 
+		earlier.getMonth();
+		earlier.getYear();
+		System.out.println(now);
+		System.out.println(earlier);
+		System.out.println(earlier.getMonth());
 		try {
+			System.out.println(bill.toString());
 			psobj = con.prepareStatement(insertBill);
-			psobj.setInt(1, bill.getCust_id());
-
+			psobj.setDate(1, date);
+			psobj.setString(2, String.valueOf(earlier.getMonth()));
+			psobj.setInt(3, bill.getCust_id());
+			System.out.println("inside repo" + bill.getCust_id());
 			psobj.execute();
 
 		} catch (SQLException e) {

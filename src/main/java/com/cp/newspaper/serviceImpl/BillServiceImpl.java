@@ -10,14 +10,20 @@ import com.cp.newspaper.repository.BillRepo;
 import com.cp.newspaper.service.BillService;
 
 public class BillServiceImpl implements BillService {
-	BillRepo billRepo = new BillRepo();
-	HashMap<Integer, Bill> billHash = new HashMap<Integer, Bill>();
+	BillRepo billRepo = null;
+	HashMap<Integer, Bill> billHash = null;
 
-	@Override
+	public BillServiceImpl() {
+		// System.out.println("inside const");
+		billRepo = new BillRepo();
+		billHash = new HashMap<Integer, Bill>();
+	}
+
 	public int billCreate(Bill bill) {
 		// TODO Auto-generated method stub
 		int billId = 0;
 		try {
+			System.out.println(bill.getCust_id());
 			billId = billRepo.insertbill(bill);
 
 		} catch (CPException e) {
@@ -46,7 +52,7 @@ public class BillServiceImpl implements BillService {
 		int billId = 0;
 		for (String partName : partCart.keySet()) {
 			BillParticular billPart = partCart.get(partName);
-			billPart.setBill_id(BillRepo.getBillId());
+			billPart.setBill_id(billRepo.getBillId());
 			partCart.put(partName, billPart);
 		}
 

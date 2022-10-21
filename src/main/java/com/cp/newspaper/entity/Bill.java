@@ -61,4 +61,10 @@ public class Bill {
 		this.cust_id = cust_id;
 	}
 
+	public Bill(int cust_id) {
+
+		super();
+		this.cust_id = cust_id;
+	}
+
 }
