@@ -23,7 +23,7 @@ public class BillServiceImpl implements BillService {
 		// TODO Auto-generated method stub
 		int billId = 0;
 		try {
-			System.out.println(bill.getCust_id());
+			// System.out.println(bill.getCust_id());
 			billId = billRepo.insertbill(bill);
 
 		} catch (CPException e) {
@@ -61,7 +61,6 @@ public class BillServiceImpl implements BillService {
 		return billId;
 	}
 
-	@Override
 	public List<BillParticular> getBillParticular(int billId) {
 		// TODO Auto-generated method stub
 		List<BillParticular> listPartList = billRepo.getAllBillParticular(billId);

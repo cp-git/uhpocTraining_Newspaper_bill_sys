@@ -62,11 +62,10 @@ public class ParticularServiceImpl implements ParticularService {
 		return this.partHashMap;
 	}
 
-	@Override
-	public Particular getParticularByName(String partName) {
+	public Particular getParticularById(int part_id) {
 		// TODO Auto-generated method stub
 		this.partRepo = new PartRepo();
-		return partRepo.getParticularByName(partName);
+		return partRepo.getParticularById(part_id);
 
 	}
 }

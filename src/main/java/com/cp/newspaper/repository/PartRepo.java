@@ -94,8 +94,39 @@ public class PartRepo {
 		return listPart;
 	}
 
-	public Particular getParticularByName(String partName) {
+//	public Particular getParticularByName(String partName) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
+	public Particular getParticularById(int part_id) {
 		// TODO Auto-generated method stub
-		return null;
+		int partId = 0;
+		Particular part = null;
+		String insertQuery = "select * from Particular where part_id = ?";
+		try {
+			con = dbm.getConnection();
+			pstmt = con.prepareStatement(insertQuery);
+			pstmt.setInt(1, part_id);
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				int partId2 = rs.getInt("part_id");
+				String partName = rs.getString("part_name");
+				int partAmount = rs.getInt("part_amount");
+
+				part = new Particular(partId2, partName, partAmount);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		} finally {
+			dbm.closeConnection(con);
+
+		}
+		return part;
 	}
+
 }

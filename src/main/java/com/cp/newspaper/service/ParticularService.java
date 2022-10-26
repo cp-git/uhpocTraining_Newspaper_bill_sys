@@ -12,5 +12,5 @@ public interface ParticularService {
 
 	HashMap<String, Particular> getPartHashMap() throws CPException;
 
-	public Particular getParticularByName(String partName);
+	Particular getParticularById(int part_id);
 }

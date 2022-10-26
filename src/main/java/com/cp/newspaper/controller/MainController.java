@@ -1,6 +1,9 @@
 package com.cp.newspaper.controller;
 
+import java.io.FileReader;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
 import com.cp.newspaper.entity.Bill;
@@ -32,7 +35,7 @@ public class MainController {
 
 	}
 
-	public static void main(String[] args) throws CPException {
+	public static void main(String[] args) throws CPException, Exception {
 		// TODO Auto-generated method stub
 		MessageBundle mb = MessageBundle.getBundle();
 		try {
@@ -54,7 +57,7 @@ public class MainController {
 
 			Scanner sc = new Scanner(System.in);
 			int choice = sc.nextInt();
-			System.out.println(choice);
+			// System.out.println(choice);
 			switch (choice) {
 			case 1:
 				ParticularService part = new ParticularServiceImpl();
@@ -159,14 +162,15 @@ public class MainController {
 				int custid = 0;
 				System.out.println("Enter the Customer Phone Number");
 				long custPhone = sc.nextLong();
+				int billId = 0;
 
 				if (customerHash.containsKey(custPhone)) {
 					// System.out.println("customer added");
 					custId = customerHash.get(custPhone).getCust_id();
-					System.out.println("here" + custId);
-					Bill bill = new Bill(custid);
-					System.out.println(bill.getCust_id());
-					int billId = billService.billCreate(bill);
+					// System.out.println("here" + custId);
+					Bill bill = new Bill(custId);
+					// System.out.println(bill.getCust_id());
+					billId = billService.billCreate(bill);
 
 					// Bill Particular
 					HashMap<String, BillParticular> partcart = new HashMap<>();
@@ -177,11 +181,12 @@ public class MainController {
 
 						if (partCache.containsKey(partName)) {
 							Particular particular = partCache.get(partName);
-							System.out.println("Particular added");
 
-							// BillParticular bilPart = new BillParticular(particular.getPart_id(),
-							// partAmount);
-							// partcart.put(partName, bilPart);
+							BillParticular bilPart = new BillParticular(bill.getBill_id(), particular.getPart_id());
+							partcart.put(partName, bilPart);
+//							partCache.put(partName, particular);
+
+							System.out.println("Particular added");
 
 							System.out.println("Do you want to add another particular - [Y]es or [N]o?");
 							String ch = sc.next();
@@ -203,8 +208,47 @@ public class MainController {
 					System.out.println("Customer not exist");
 
 				}
+				// printing Agency details
+				FileReader reader = new FileReader("src/main/resources/Agency_info");
+				Properties p = new Properties();
+				p.load(reader);
 
+				System.out.println("agency Details " + p.getProperty("AgencyName") + " " + p.getProperty("Address")
+						+ " " + p.getProperty("City") + " " + p.getProperty("state"));
+
+				System.out.println();
+
+				// printing customer details
+				System.out.println(customerHash.get(custPhone));
+
+				System.out.println();
+
+				// printing Bill Particular details
+				// System.out.println(billId);
+
+				List<BillParticular> listBillPart = billService.getBillParticular(billId);
+				// System.out.println(listBillPart);
+
+				Bill totalPrice;
+				ParticularService part1 = new ParticularServiceImpl();
+				float totalPartPrice = 0;
+
+				for (BillParticular billPart : listBillPart) {
+//					System.out.println(bilPart.getPart_id());
+					int partId = billPart.getPart_id();
+
+					Particular particular = part1.getParticularById(partId);
+					totalPartPrice = totalPartPrice + particular.getPart_amount();
+					// totalPartPrice = particular.getPart_amount();
+					System.out.println(particular.toString());
+					// totalPrice = totalPrice;
+
+				}
+
+				totalPrice = billService.getBill(billId);
+				System.out.println("Total " + totalPartPrice);
 				break;
+
 			case 4:
 
 				System.out.println("Terminated Successfully");

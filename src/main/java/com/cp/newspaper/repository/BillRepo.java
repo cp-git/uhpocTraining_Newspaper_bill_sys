@@ -33,16 +33,16 @@ public class BillRepo {
 
 		earlier.getMonth();
 		earlier.getYear();
-		System.out.println(now);
-		System.out.println(earlier);
-		System.out.println(earlier.getMonth());
+//		System.out.println(now);
+//		System.out.println(earlier);
+//		System.out.println(earlier.getMonth());
 		try {
-			System.out.println(bill.toString());
+			// System.out.println(bill.toString());
 			psobj = con.prepareStatement(insertBill);
 			psobj.setDate(1, date);
 			psobj.setString(2, String.valueOf(earlier.getMonth()));
 			psobj.setInt(3, bill.getCust_id());
-			System.out.println("inside repo" + bill.getCust_id());
+			// System.out.println("inside repo" + bill.getCust_id());
 			psobj.execute();
 
 		} catch (SQLException e) {
@@ -140,9 +140,10 @@ public class BillRepo {
 		String insertCart = "INSERT INTO bill_particular(bill_id,part_id) VALUES(?,?)";
 		int billId = 0;
 
-		for (String partName : partCart.keySet()) {
-			try {
-				con = dbManager.getConnection();
+		try {
+			con = dbManager.getConnection();
+			for (String partName : partCart.keySet()) {
+
 				psobj = con.prepareStatement(insertCart);
 				BillParticular part = partCart.get(partName);
 				billId = part.getBill_id();
@@ -153,17 +154,16 @@ public class BillRepo {
 				// part.getPart_id());
 				psobj.execute();
 
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CPException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				dbManager.closeConnection(con);
 			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			dbManager.closeConnection(con);
 		}
-
 		return billId;
 	}
 
@@ -197,7 +197,7 @@ public class BillRepo {
 		} finally {
 			dbManager.closeConnection(con);
 		}
-
+		System.out.println(bilPartList);
 		return bilPartList;
 	}
 
@@ -213,12 +213,12 @@ public class BillRepo {
 
 			ResultSet rs = psobj.executeQuery();
 			while (rs.next()) {
+				int bill_Id = rs.getInt("bill_id");
+				Date billDate = rs.getDate("bill_date");
+				String billMonth = rs.getString("bill_month");
+				int custId = rs.getInt("cust_id");
 
-				Date billDate = rsobj.getDate("bill_date");
-				String billMonth = rsobj.getString("bill_month");
-				int custId = rsobj.getInt("cust_id");
-
-				bill = new Bill(billDate, billMonth, custId);
+				bill = new Bill(bill_Id, billDate, billMonth, custId);
 				// System.out.println("here" + bill.getBillDate());
 			}
 		} catch (SQLException e) {
