@@ -49,8 +49,7 @@ public class ParticularServiceImpl implements ParticularService {
 
 	}
 
-	@Override
-	public HashMap<String, Particular> getPartHashMap() throws CPException {
+	public HashMap<String, Particular> initializeParticularHash() throws CPException {
 		// TODO Auto-generated method stub
 		this.partRepo = new PartRepo();
 		this.partList = this.partRepo.getParticularDetails();

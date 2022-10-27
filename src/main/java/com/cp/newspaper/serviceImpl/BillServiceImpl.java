@@ -69,7 +69,7 @@ public class BillServiceImpl implements BillService {
 	}
 
 	@Override
-	public Bill getBill(int billId) {
+	public Bill getBillById(int billId) {
 		// TODO Auto-generated method stub
 		Bill bill = billRepo.getBillForBillId(billId);
 		// System.out.println(bill.getBillDate());

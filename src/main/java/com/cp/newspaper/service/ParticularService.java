@@ -10,7 +10,7 @@ public interface ParticularService {
 
 	int createPart(Particular part) throws CPException;
 
-	HashMap<String, Particular> getPartHashMap() throws CPException;
+	HashMap<String, Particular> initializeParticularHash() throws CPException;
 
 	Particular getParticularById(int part_id);
 }

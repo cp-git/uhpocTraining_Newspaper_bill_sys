@@ -40,7 +40,7 @@ public class CustServiceImpl implements CustService {
 	}
 
 	@Override
-	public HashMap<Long, Customer> display() {
+	public HashMap<Long, Customer> initializeCustomerHash() {
 		// TODO Auto-generated method stub
 		// System.out.println("loading Cache...");
 		for (Customer customer : custRepo.getCustomerDetails()) {

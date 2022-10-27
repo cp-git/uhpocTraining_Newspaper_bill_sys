@@ -11,7 +11,7 @@ public interface CustService {
 
 	List<Customer> getDetailsAll();
 
-	HashMap<Long, Customer> display();
+	HashMap<Long, Customer> initializeCustomerHash();
 
 	// boolean isCacheEmpty(); }
 

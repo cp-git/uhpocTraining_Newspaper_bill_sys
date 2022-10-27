@@ -53,9 +53,9 @@ public class TestCustServiceImpl {
 	}
 
 	@Test
-	public void testDisplay() {
+	public void testinitializeCustomerHash() {
 		Customer customer = new Customer(1, "Akash", "Hadapsar", "Pune", 8847741211L);
-		HashMap<Long, Customer> customerHash = custServ.display();
+		HashMap<Long, Customer> customerHash = custServ.initializeCustomerHash();
 		Customer cust = customerHash.get(8847741211L);
 
 		assertEquals(customer.getCust_name(), cust.getCust_name());

@@ -23,14 +23,15 @@ public class MainController {
 	static HashMap<Long, Customer> customerHash = new HashMap<Long, Customer>();
 	private static HashMap<String, Particular> partCache = new HashMap<String, Particular>();
 
+	// For Loading Cache of customer and particular
 	private static void loadCache() throws CPException {
 		CustService custService = new CustServiceImpl();
 		// System.out.println("Object Id :: " + custService);
-		customerHash = custService.display();
+		customerHash = custService.initializeCustomerHash();
 		// System.out.println(customerHash);
 
 		ParticularService part = new ParticularServiceImpl();
-		partCache = part.getPartHashMap();
+		partCache = part.initializeParticularHash();
 		// System.out.println(partCache);
 
 	}
@@ -38,6 +39,8 @@ public class MainController {
 	public static void main(String[] args) throws CPException, Exception {
 		// TODO Auto-generated method stub
 		MessageBundle mb = MessageBundle.getBundle();
+
+		// checking in customerHash data is available or not.
 		try {
 			if ((customerHash != null || customerHash.size() == 0)) {
 				loadCache();
@@ -59,6 +62,8 @@ public class MainController {
 			int choice = sc.nextInt();
 			// System.out.println(choice);
 			switch (choice) {
+
+			// Add NewsPaper Details
 			case 1:
 				ParticularService part = new ParticularServiceImpl();
 				while (true) {
@@ -97,12 +102,13 @@ public class MainController {
 				}
 				break;
 
+			// Add Customer Details
 			case 2:
 				CustService custService = new CustServiceImpl();
 
 				int custId = 0;
 
-				// custService.display();
+				// custService.initializeCustomerHash();
 				while (true) {
 
 					try {
@@ -116,21 +122,25 @@ public class MainController {
 						String custAddrs2 = sc.next();
 						System.out.println("Enter the Customer Phone Number");
 						long custPhone = sc.nextLong();
+						if (custPhone > 1000000000 && custPhone <= 9999999999L) {
+							if (customerHash.containsKey(custPhone)) {
+								System.out.println("Already Exist");
 
-						if (customerHash.containsKey(custPhone)) {
-							System.out.println("Already Exist");
+							} else {
+								Customer customer = new Customer(custName, custAddrs1, custAddrs2, custPhone);
+								custId = custService.createCustomer(customer);
+								customer.setCust_id(custId);
+								System.out.println("custid" + custId);
+								customerHash.put(custPhone, customer);
+								System.out.println("Customer details inserted successfully");
 
+							}
 						} else {
-							Customer customer = new Customer(custName, custAddrs1, custAddrs2, custPhone);
-							custId = custService.createCustomer(customer);
-							customer.setCust_id(custId);
-							System.out.println("custid" + custId);
-							customerHash.put(custPhone, customer);
-							System.out.println("Customer details inserted successfully");
-
+							System.out.println("Invalid customer phone");
 						}
+					}
 
-					} catch (Exception ex) {
+					catch (Exception ex) {
 						ex.printStackTrace();
 						break;
 					}
@@ -145,6 +155,8 @@ public class MainController {
 					}
 				}
 				break;
+
+			// Generate NewsPaper Bill
 			case 3:
 
 				if (customerHash.isEmpty()) {
@@ -153,13 +165,12 @@ public class MainController {
 				}
 
 				if (partCache.isEmpty()) {
-					System.out.println("Please create particulaer first");
+					System.out.println("Please create particular first");
 					continue;
 				}
 
 				BillService billService = new BillServiceImpl();
-				CustService custservice = new CustServiceImpl();
-				int custid = 0;
+
 				System.out.println("Enter the Customer Phone Number");
 				long custPhone = sc.nextLong();
 				int billId = 0;
@@ -208,14 +219,26 @@ public class MainController {
 					Properties p = new Properties();
 					p.load(reader);
 
-					System.out.println(p.getProperty("AgencyName") + " " + p.getProperty("Address") + " "
-							+ p.getProperty("City") + " " + p.getProperty("state"));
+					System.out.println();
+					System.out.println(
+							"--------------------------------------------------------------------------------------------------");
+					System.out.println("                                 " + p.getProperty("AgencyName")
+							+ "										     ");
+					System.out.println("				 	" + p.getProperty("Address")
+							+ "											 ");
+					System.out.println("			  	     " + p.getProperty("City") + " " + p.getProperty("state"));
 
 					System.out.println();
 
 					// printing customer details
-					System.out.println(customerHash.get(custPhone));
-
+					Customer customer = customerHash.get(custPhone);
+					Bill billTemp = billService.getBillById(billId);
+					System.out.println("Name 	    :" + customer.getCust_name() + "              Bill Date 	    :"
+							+ billTemp.getBill_date());
+					System.out.println("Address 1   :" + customer.getCust_address1()
+							+ "           Bill Month          :" + billTemp.getBill_month());
+					System.out.println("Address 2   :" + customer.getCust_address2());
+					System.out.println("Phone       :" + customer.getCust_phone());
 					System.out.println();
 
 					// printing Bill Particular details
@@ -224,9 +247,10 @@ public class MainController {
 					List<BillParticular> listBillPart = billService.getBillParticular(billId);
 					// System.out.println(listBillPart);
 
-					Bill totalPrice;
 					ParticularService part1 = new ParticularServiceImpl();
 					float totalPartPrice = 0;
+
+					System.out.println("Particulars" + "		" + "Amount");
 
 					for (BillParticular billPart : listBillPart) {
 //						System.out.println(bilPart.getPart_id());
@@ -235,12 +259,11 @@ public class MainController {
 						Particular particular = part1.getParticularById(partId);
 						totalPartPrice = totalPartPrice + particular.getPart_amount();
 
-						System.out.println(particular.toString());
+						System.out.println(particular.getPart_name() + "			" + particular.getPart_amount());
 
 					}
 
-					totalPrice = billService.getBill(billId);
-					System.out.println("Total " + totalPartPrice);
+					System.out.println("Total" + "			" + totalPartPrice);
 				} else {
 					System.out.println("Customer not exist.Please Enter a valid customer Phone ");
 					break;
@@ -248,6 +271,7 @@ public class MainController {
 
 				break;
 
+			// Terminating Application
 			case 4:
 
 				System.out.println("Terminated Successfully");
@@ -256,7 +280,7 @@ public class MainController {
 				break;
 			default:
 				System.out.println("Please enter option 1, 2, 3 or 4 ");
-
+				break;
 			}
 		}
 	}

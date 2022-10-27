@@ -197,7 +197,7 @@ public class BillRepo {
 		} finally {
 			dbManager.closeConnection(con);
 		}
-		System.out.println(bilPartList);
+		// System.out.println(bilPartList);
 		return bilPartList;
 	}
 

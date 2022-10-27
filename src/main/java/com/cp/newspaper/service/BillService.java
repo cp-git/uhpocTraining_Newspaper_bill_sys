@@ -12,7 +12,7 @@ public interface BillService {
 
 	List<Bill> getAllBillData();
 
-	// HashMap<Integer, Bill> display();
+	// HashMap<Integer, Bill> initializeCustomerHash();
 
 	boolean isCacheEmpty();
 
@@ -20,7 +20,7 @@ public interface BillService {
 
 	public List<BillParticular> getBillParticular(int billId);
 
-	Bill getBill(int billId);
+	Bill getBillById(int billId);
 
 	// public float getTotal(int billId);
 }
