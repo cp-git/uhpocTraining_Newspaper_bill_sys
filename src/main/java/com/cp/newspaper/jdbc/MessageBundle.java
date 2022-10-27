@@ -14,9 +14,8 @@ public class MessageBundle {
 
 	private void loadBundle() {
 		try {
-//			System.out.println("Inside Load bundle");
-			// rb = ResourceBundle.getBundle(RESOURCE_BUNDLE, new Locale("en_IN"),
-			// this.getClass().getClassLoader());
+			System.out.println("Inside Load bundle");
+			rb = ResourceBundle.getBundle(RESOURCE_BUNDLE, new Locale("en_IN"), this.getClass().getClassLoader());
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}

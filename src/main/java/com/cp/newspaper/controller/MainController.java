@@ -49,7 +49,7 @@ public class MainController {
 
 		while (true) {
 			System.out.println("============= Main Menu ============");
-			System.out.println("1. Add Particular Details");
+			System.out.println("1. Add NewsPaper Details");
 			System.out.println("2. Add Customer Details");
 			System.out.println("3. Generate Newspaper Bill");
 			System.out.println("4. Exit");
@@ -67,12 +67,12 @@ public class MainController {
 						System.out.println("Enter particular name");
 						String partName = sc.next();
 
-						System.out.println("Enter particular Amount");
-						int partAmount = sc.nextInt();
-
 						if (partCache.containsKey(partName)) {
 							System.out.println("Particular is already available");
 						} else {
+							System.out.println("Enter particular Amount");
+							int partAmount = sc.nextInt();
+
 							Particular particular = new Particular(partName, partAmount);
 							int partId = part.createPart(particular);
 							particular.setPart_id(partId);
@@ -89,7 +89,7 @@ public class MainController {
 					System.out.println("Do you want to add another particular [Y]es or [N]o?");
 					String ch = sc.next();
 					sc.nextLine();
-					if (ch.equals("Y") || ch.equals("y")) {
+					if (ch.equalsIgnoreCase("Y")) {
 						continue;
 					} else {
 						break;
@@ -138,7 +138,7 @@ public class MainController {
 					System.out.println("Do you want to add another customer [Y]es or [N]o?");
 					String ch = sc.next();
 					sc.nextLine();
-					if (ch.equals("Y") || ch.equals("y")) {
+					if (ch.equalsIgnoreCase("Y")) {
 						continue;
 					} else {
 						break;
@@ -190,7 +190,7 @@ public class MainController {
 
 							System.out.println("Do you want to add another particular - [Y]es or [N]o?");
 							String ch = sc.next();
-							if (ch.equals("Y") || ch.equals("y")) {
+							if (ch.equalsIgnoreCase("Y")) {
 								continue;
 							} else {
 								billService.createBillParticular(partcart);
@@ -203,50 +203,49 @@ public class MainController {
 						}
 
 					}
+					// printing Agency details
+					FileReader reader = new FileReader("src/main/resources/Agency_info");
+					Properties p = new Properties();
+					p.load(reader);
 
+					System.out.println(p.getProperty("AgencyName") + " " + p.getProperty("Address") + " "
+							+ p.getProperty("City") + " " + p.getProperty("state"));
+
+					System.out.println();
+
+					// printing customer details
+					System.out.println(customerHash.get(custPhone));
+
+					System.out.println();
+
+					// printing Bill Particular details
+					// System.out.println(billId);
+
+					List<BillParticular> listBillPart = billService.getBillParticular(billId);
+					// System.out.println(listBillPart);
+
+					Bill totalPrice;
+					ParticularService part1 = new ParticularServiceImpl();
+					float totalPartPrice = 0;
+
+					for (BillParticular billPart : listBillPart) {
+//						System.out.println(bilPart.getPart_id());
+						int partId = billPart.getPart_id();
+
+						Particular particular = part1.getParticularById(partId);
+						totalPartPrice = totalPartPrice + particular.getPart_amount();
+
+						System.out.println(particular.toString());
+
+					}
+
+					totalPrice = billService.getBill(billId);
+					System.out.println("Total " + totalPartPrice);
 				} else {
-					System.out.println("Customer not exist");
-
-				}
-				// printing Agency details
-				FileReader reader = new FileReader("src/main/resources/Agency_info");
-				Properties p = new Properties();
-				p.load(reader);
-
-				System.out.println("agency Details " + p.getProperty("AgencyName") + " " + p.getProperty("Address")
-						+ " " + p.getProperty("City") + " " + p.getProperty("state"));
-
-				System.out.println();
-
-				// printing customer details
-				System.out.println(customerHash.get(custPhone));
-
-				System.out.println();
-
-				// printing Bill Particular details
-				// System.out.println(billId);
-
-				List<BillParticular> listBillPart = billService.getBillParticular(billId);
-				// System.out.println(listBillPart);
-
-				Bill totalPrice;
-				ParticularService part1 = new ParticularServiceImpl();
-				float totalPartPrice = 0;
-
-				for (BillParticular billPart : listBillPart) {
-//					System.out.println(bilPart.getPart_id());
-					int partId = billPart.getPart_id();
-
-					Particular particular = part1.getParticularById(partId);
-					totalPartPrice = totalPartPrice + particular.getPart_amount();
-					// totalPartPrice = particular.getPart_amount();
-					System.out.println(particular.toString());
-					// totalPrice = totalPrice;
-
+					System.out.println("Customer not exist.Please Enter a valid customer Phone ");
+					break;
 				}
 
-				totalPrice = billService.getBill(billId);
-				System.out.println("Total " + totalPartPrice);
 				break;
 
 			case 4:

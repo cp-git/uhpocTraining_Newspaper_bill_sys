@@ -233,32 +233,5 @@ public class BillRepo {
 
 		return bill;
 	}
-	//
-	// public float getTotal(int billNo) {
-	// // TODO Auto-generated method stub
-	// String getTotalQuery =
-	// "select sum(b.prod_qty * a.prod_unit_price - (b.prod_qty * a.prod_unit_price
-	// * a.prod_discount/100.00)) as total from product as a FULL JOIN
-	// invoice_product as b ON a.prod_id = b.prod_id where b.bill_no="
-	// + billNo + "";
-	// Statement st = null;
-	// float totalPrice = 0;
-	// try {
-	// con = dbManager.getConnection();
-	// st = con.createStatement();
-	// ResultSet rs = st.executeQuery(getTotalQuery);
-	// while (rs.next()) {
-	// totalPrice = rs.getFloat(1);
-	// }
-	//
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (CPException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// return totalPrice;
-	// }
+
 }

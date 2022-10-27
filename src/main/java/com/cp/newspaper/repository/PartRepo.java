@@ -90,6 +90,9 @@ public class PartRepo {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			dbm.closeConnection(con);
+
 		}
 		return listPart;
 	}

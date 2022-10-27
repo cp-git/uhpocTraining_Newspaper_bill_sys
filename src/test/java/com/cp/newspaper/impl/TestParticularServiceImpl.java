@@ -43,12 +43,23 @@ public class TestParticularServiceImpl {
 	public void testGetParticularDetails() throws CPException {
 		Particular particular = new Particular(8, "TimesOfIndia", 300);
 		partList = partServ.getPartHashMap();
-		Particular part = partList.get(8);
+		Particular part = partList.get("TimesOfIndia");
 
 		assertEquals(particular.getPart_name(), part.getPart_name());
 
 		assertEquals(particular.getPart_amount(), part.getPart_amount());
 
+	}
+
+	@Test
+	public void testGetPartHashMap() throws CPException {
+		Particular particular = new Particular(8, "TimesOfIndia", 300);
+		HashMap<String, Particular> partCache = partServ.getPartHashMap();
+		Particular part = partCache.get("TimesOfIndia");
+
+		assertEquals(particular.getPart_name(), part.getPart_name());
+
+		assertEquals(particular.getPart_amount(), part.getPart_amount());
 	}
 
 }
